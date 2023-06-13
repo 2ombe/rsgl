@@ -16,7 +16,7 @@ export default function PaymentMethods() {
     e.preventDefault();
     ctxDispatch({ type: "SAVE_PAYMENT_METHODS", payload: paymentMethodName });
     localStorage.setItem("paymentMethod", paymentMethodName);
-    if (userInfo.isAdmin || userInfo.suAdmin) {
+    if (userInfo.isAdmin || userInfo.isSeller) {
       navigate("/reportReview");
     } else {
       navigate("/placeorder");

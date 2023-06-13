@@ -102,6 +102,28 @@ reportRouter.get(
   })
 );
 
+reportRouter.post("/search", async (req, res) => {
+  const { query } = req.body;
+  try {
+    const reports = await Report.find({
+      $or: [
+        { comments: { $regex: query, $options: `i` } },
+        { depts: query },
+        { "reportItems.name": { $regex: query, $options: `i` } },
+      ],
+    });
+
+    if (reports.length === 0) {
+      return res.status(404).json({ message: "No report found" });
+    }
+
+    return res.json(reports);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
+  }
+});
+
 reportRouter.get(
   "/all",
   isAuth,
