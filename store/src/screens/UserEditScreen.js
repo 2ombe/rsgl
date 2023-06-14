@@ -126,9 +126,17 @@ export default function UserEditScreen() {
             className="mb-3"
             type="checkbox"
             id="isAdmin"
-            label="Seller"
+            label="Admin"
             checked={isAdmin}
             onChange={(e) => setIsAdmin(e.target.checked)}
+          />
+          <Form.Check
+            className="mb-3"
+            type="checkbox"
+            id="isSeller"
+            label="Seller"
+            checked={isSeller}
+            onChange={(e) => setIsSeller(e.target.checked)}
           />
 
           <div className="mb-3">

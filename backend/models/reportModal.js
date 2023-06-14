@@ -22,6 +22,7 @@ const reportModalSchema = new mongoose.Schema(
     depts: { type: Number },
     real: { type: Number },
     comments: { type: String },
+    givenTo: { type: String },
 
     paymentMethod: { type: String, required: true },
 

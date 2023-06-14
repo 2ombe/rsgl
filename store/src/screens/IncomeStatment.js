@@ -10,6 +10,7 @@ import MessageBox from "../components/MessageBox";
 import { useReducer } from "react";
 import { getError } from "../utils";
 import { useNavigate } from "react-router-dom";
+import SearchDeptbox from "../components/SearchDeptbox";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -62,72 +63,75 @@ export default function Report() {
       ) : error ? (
         <MessageBox></MessageBox>
       ) : (
-        <table
-          className="table"
-          style={{ background: "rgb(0, 102, 255)" }}
-          striped
-          bordered
-          hover
-        >
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Date</th>
-              <th>Quantity</th>
-              <th>Sold at</th>
-              <th>sales</th>
-              <th>costs</th>
-              <th>taxes</th>
-              <th>Gross profit</th>
-              <th>Net profit</th>
-              <th>Depts</th>
-              <th>Expense</th>
-              <th>ibyangiritse</th>
-              {/* <td>Status</td> */}
-              <td>comments</td>
-              {/* <td>Action</td> */}
-            </tr>
-          </thead>
-          <tbody>
-            {report.map((item) => (
-              <tr key={item._id}>
-                <td>{item._id}</td>
-                <td>{item.createdAt.substring(0, 10)}</td>
-                <td>{item.real}</td>
-                <td>{item.soldAt}</td>
-                <td>{item.sales}</td>
-
-                <td>{item.costs}</td>
-
-                <td>{item.taxPrice}</td>
-                <td style={{ backgroundColor: "yellow" }} className="profit">
-                  {item.grossProfit}
-                </td>
-                <td style={{ backgroundColor: "yellow" }} className="profit">
-                  {item.netProfit}
-                </td>
-                <td style={{ backgroundColor: "tomato" }}>{item.depts}</td>
-                <td style={{ backgroundColor: "tomato" }}>{item.expense}</td>
-                <td style={{ backgroundColor: "tomato" }}>
-                  {item.ibyangiritse}
-                </td>
-                {/* <td>{item.isPaid === true ? "Paid" : "No"}</td> */}
-                <td>{item.comments}</td>
-                <td>
-                  <Button
-                    type="button"
-                    variant="light"
-                    onClick={() => {
-                      navigate(`/report/${item._id}`);
-                    }}
-                  >
-                    Details
-                  </Button>
-                </td>
+        <>
+          <SearchDeptbox />
+          <table
+            className="table mt-3"
+            style={{ background: "rgb(0, 102, 255)" }}
+            striped
+            bordered
+            hover
+          >
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Date</th>
+                <th>Quantity</th>
+                <th>Sold at</th>
+                <th>sales</th>
+                <th>costs</th>
+                <th>taxes</th>
+                <th>Gross profit</th>
+                <th>Net profit</th>
+                <th>Depts</th>
+                <th>Expense</th>
+                <th>ibyangiritse</th>
+                {/* <td>Status</td> */}
+                <td>comments</td>
+                {/* <td>Action</td> */}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {report.map((item) => (
+                <tr key={item._id}>
+                  <td>{item._id}</td>
+                  <td>{item.createdAt.substring(0, 10)}</td>
+                  <td>{item.real}</td>
+                  <td>{item.soldAt}</td>
+                  <td>{item.sales}</td>
+
+                  <td>{item.costs}</td>
+
+                  <td>{item.taxPrice}</td>
+                  <td style={{ backgroundColor: "yellow" }} className="profit">
+                    {item.grossProfit}
+                  </td>
+                  <td style={{ backgroundColor: "yellow" }} className="profit">
+                    {item.netProfit}
+                  </td>
+                  <td style={{ backgroundColor: "tomato" }}>{item.depts}</td>
+                  <td style={{ backgroundColor: "tomato" }}>{item.expense}</td>
+                  <td style={{ backgroundColor: "tomato" }}>
+                    {item.ibyangiritse}
+                  </td>
+                  {/* <td>{item.isPaid === true ? "Paid" : "No"}</td> */}
+                  <td>{item.comments}</td>
+                  <td>
+                    <Button
+                      type="button"
+                      variant="light"
+                      onClick={() => {
+                        navigate(`/report/${item._id}`);
+                      }}
+                    >
+                      Details
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
       )}
     </div>
   );

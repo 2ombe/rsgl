@@ -22,7 +22,7 @@ export default function ShippingAddress() {
     if (!userInfo) {
       navigate("/signin?redirect=/shipping");
     }
-    if (userInfo.isAdmin || userInfo.suAdmin) {
+    if (userInfo.isAdmin || userInfo.isSeller) {
       navigate("/signin?redirect=/admin/createReport");
     }
   }, [userInfo, navigate]);

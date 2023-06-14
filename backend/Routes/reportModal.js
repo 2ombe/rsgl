@@ -1,4 +1,4 @@
-import express from "express";
+import express, { query } from "express";
 import expressAsyncHandler from "express-async-handler";
 import { isAdmin, isAuth, suAdmin } from "../utils.js";
 import Report from "../models/reportModal.js";
@@ -16,7 +16,7 @@ reportRouter.post(
       reportItems: req.body.reportItems.map((x) => ({ ...x, product: x._id })),
       paymentMethod: req.body.paymentMethod,
       sales: req.body.sales,
-
+      givenTo: req.body.givenTo,
       quantity: req.body.reportItems.quantity,
       taxPrice: req.body.taxPrice,
       grossProfit: req.body.grossProfit,
@@ -140,13 +140,36 @@ reportRouter.post(
   "/search",
   isAuth,
   expressAsyncHandler(async (req, res) => {
-    const { depts } = req.body;
-    let query = {};
+    const { query } = req;
+    const givebTo = query.givebTo || "";
+    const searchQuery = query.query || "";
 
-    if (depts <= 0) {
-      query = { depts: { $lte: 0 } };
-    }
-    const report = await Report.find(query);
+    const queryFilter =
+      searchQuery && searchQuery !== "all"
+        ? {
+            name: {
+              $regex: searchQuery,
+              $options: "i",
+            },
+          }
+        : {};
+    const givenToFilter = givebTo && givebTo !== "all" ? { givebTo } : {};
+
+    const deptsFilter =
+      depts && depts !== "all"
+        ? {
+            depts: {
+              $gte: Number(depts.split("-")[0]),
+              $lte: Number(depts.split("-")[1]),
+            },
+          }
+        : {};
+
+    const report = await Report.find({
+      ...queryFilter,
+      ...givenToFilter,
+      ...deptsFilter,
+    });
 
     res.send(report);
   })

@@ -43,6 +43,7 @@ import Expense from "./screens/Expese";
 import SeeReport from "./screens/SeeReport";
 import Special from "./screens/Special";
 import GetSpecial from "./screens/GetSpecial";
+import SearchForm from "./screens/SearchDept";
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -224,6 +225,7 @@ function App() {
               <Route path="/special" element={<Special />} />
               <Route path="/reportReview" element={<SendReport />} />
               <Route path="/search" element={<SearchScreen />} />
+              <Route path="/depts" element={<SearchForm />} />
 
               <Route
                 path="/profile"
