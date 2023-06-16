@@ -1,7 +1,8 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useContext, useEffect, useReducer } from "react";
 import { Row, Col } from "react-bootstrap";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Store } from "../Store";
 import { Helmet } from "react-helmet-async";
 
 const reducer = (state, action) => {
@@ -29,6 +30,7 @@ function SearchForm() {
   const sp = new URLSearchParams(search);
   const given = sp.get("givenTo") || "all";
   const query = sp.get("query") || "all";
+  const { state } = useContext(Store);
 
   const [{ loading, givenTo }, dispatch] = useReducer(reducer, {
     loading: true,
@@ -39,17 +41,25 @@ function SearchForm() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${state.userInfo.token}`,
+          },
+        };
+
         const { data } = await axios.get(
-          `/api/report/search?givebTo=${given}&query=${query}`
+          `/api/report/search?givebTo=${given}&query=${query}`,
+          config
         );
-        console.log(data);
+
         dispatch({ type: "FETCH_SUCCESS", payload: data });
       } catch (error) {
         dispatch({ type: "FETCH_FAIL", payload: error.message });
       }
     };
+
     fetchData();
-  }, [given, query]);
+  }, [given, query, state]);
 
   const filterFilterUrl = (filter) => {
     const filterGiven = filter.givenTo || given;
