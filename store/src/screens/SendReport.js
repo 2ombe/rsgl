@@ -199,6 +199,10 @@ export default function SendReport() {
                 {cart.report.ibyangiritse} RWF
               </Card.Text>
               <Card.Text>
+                <strong>given to:</strong>
+                {cart.report.givenTo}
+              </Card.Text>
+              <Card.Text>
                 <strong>real quantity:</strong>
                 {cart.report.real}
               </Card.Text>

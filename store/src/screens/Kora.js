@@ -17,7 +17,7 @@ export default function Kora() {
   } = state;
   const [comments, setComments] = useState("Paid");
   const [soldAt, setSoldAt] = useState(report.soldAt || 0);
-
+  const [givenTo, setgivenTo] = useState(report.givenTo || "");
   const [real, setReal] = useState(report.real || 0);
   const [depts, setDepts] = useState(report.depts || 0);
   const [ibyangiritse, setIbyangiritse] = useState(report.ibyangiritse || 0);
@@ -28,7 +28,7 @@ export default function Kora() {
       type: "REPORT",
       payload: {
         soldAt,
-
+        givenTo,
         real,
         depts,
         ibyangiritse,
@@ -39,7 +39,7 @@ export default function Kora() {
       "report",
       JSON.stringify({
         soldAt,
-
+        givenTo,
         depts,
         ibyangiritse,
         real,
@@ -95,6 +95,15 @@ export default function Kora() {
               onChange={(e) => setDepts(e.target.value)}
               name="depts"
               placeholder="depts"
+            />
+          </InputGroup>
+          <InputGroup style={{ marginBottom: "6px" }}>
+            <input
+              type="text"
+              value={givenTo}
+              onChange={(e) => setgivenTo(e.target.value)}
+              name="givenTo"
+              placeholder="izina ryuhawe ideni"
             />
           </InputGroup>
           <InputGroup style={{ marginBottom: "6px" }}>

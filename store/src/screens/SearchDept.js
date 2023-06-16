@@ -1,22 +1,25 @@
-import React, { useEffect, useReducer, useState } from "react";
-import { Form, Button, ListGroup, Row, Col } from "react-bootstrap";
+import React, { useEffect, useReducer } from "react";
+import { Row, Col } from "react-bootstrap";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
-import { getError } from "../utils";
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case "FETCH_REQUEST":
-      return { ...state, loading: true };
     case "FETCH_SUCCESS":
-      return { ...state, loading: false, givenTo: action.payload.givenTo };
+      return {
+        ...state,
+        loading: false,
+        givenTo: action.payload,
+      };
     case "FETCH_FAIL":
-      return { ...state, error: action.payload };
-    default: {
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    default:
       return state;
-    }
   }
 };
 
@@ -27,9 +30,10 @@ function SearchForm() {
   const given = sp.get("givenTo") || "all";
   const query = sp.get("query") || "all";
 
-  const [{ loading, error, givenTo }, dispatch] = useReducer(reducer, {
+  const [{ loading, givenTo }, dispatch] = useReducer(reducer, {
     loading: true,
     error: "",
+    givenTo: [],
   });
 
   useEffect(() => {
@@ -38,18 +42,19 @@ function SearchForm() {
         const { data } = await axios.get(
           `/api/report/search?givebTo=${given}&query=${query}`
         );
+        console.log(data);
         dispatch({ type: "FETCH_SUCCESS", payload: data });
       } catch (error) {
-        dispatch({ type: "FETCH_FAIL", payload: getError(error) });
+        dispatch({ type: "FETCH_FAIL", payload: error.message });
       }
     };
     fetchData();
   }, [given, query]);
 
   const filterFilterUrl = (filter) => {
-    const filterGiven = filter.given || given;
+    const filterGiven = filter.givenTo || given;
     const filterQuery = filter.query || query;
-    return `/search?givenTo=${filterGiven}&${filterQuery}`;
+    return `/search?givenTo=${filterGiven}&query=${filterQuery}`;
   };
 
   return (
@@ -77,8 +82,8 @@ function SearchForm() {
       <Row className="justify-content-between mb-3">
         <Col md={6}>
           <div>
-            {query !== "all" && " : " + query}
-            {given !== "all" && " : givenTo" + given}
+            {query !== "all" && ` : ${query}`}
+            {given !== "all" && ` : givenTo ${given}`}
           </div>
         </Col>
       </Row>
