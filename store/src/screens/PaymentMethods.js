@@ -31,7 +31,7 @@ export default function PaymentMethods() {
         </Helmet>
         <h1 className="my-3">Ubwishyu</h1>
         <Form onSubmit={submitHandler}>
-          {userInfo.isAdmin === true || userInfo.suAdmin === true ? (
+          {userInfo.isAdmin === true || userInfo.isSeller === true ? (
             <>
               <div className="mb-3">
                 <Form.Check
