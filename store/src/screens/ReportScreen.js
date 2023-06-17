@@ -109,9 +109,6 @@ export default function ReportScreen() {
 
   return (
     <div>
-      <Helmet>
-        <title>Report ${reportId}</title>
-      </Helmet>
       <h1 className="my-3">Report {reportId}</h1>
       <Row>
         <Col md={8}>

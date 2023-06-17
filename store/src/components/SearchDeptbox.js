@@ -1,22 +1,145 @@
-import React, { useState } from "react";
-import { Button, Form, FormControl, InputGroup } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import React, { useContext, useEffect, useReducer, useState } from "react";
+import {
+  Button,
+  Card,
+  Col,
+  Form,
+  FormControl,
+  InputGroup,
+  ListGroup,
+  Row,
+} from "react-bootstrap";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { getError } from "../utils";
+import { Store } from "../Store";
+import MessageBox from "./MessageBox";
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "FETCH_REQUEST":
+      return { ...state, loading: true, error: "" };
+    case "FETCH_SUCCESS":
+      return { ...state, loading: false, report: action.payload, error: "" };
+    case "FETCH_FAIL":
+      return { ...state, loading: false, error: action.payload };
+
+    case "UPDATE_REQUEST":
+      return { ...state, loadingUpdate: true };
+    case "UPDATE_SUCCESS":
+      return { ...state, loadingUpdate: false };
+    case "UPDATE_FAIL":
+      return { ...state, loadingUpdate: false };
+
+    default:
+      return state;
+  }
+}
 
 function SearchDeptbox() {
+  const { state } = useContext(Store);
+  const { userInfo } = state;
+  const params = useParams();
+  const { id: reportId } = params;
   const navigate = useNavigate();
-  const [query, setQuery] = useState("");
-  const submitHandler = (e) => {
-    e.preventDefault();
-    navigate(query ? `/depts/?query=${query}` : `/depts`);
+
+  const [{ report, loadingUpdate }, dispatch] = useReducer(reducer, {
+    loading: true,
+    report: {},
+    error: "",
+  });
+
+  useEffect(() => {
+    const fetchReport = async () => {
+      try {
+        dispatch({ type: "FETCH_REQUEST" });
+        const { data } = await axios.get(`/api/report/${reportId}`, {
+          headers: { authorization: `Bearer ${userInfo.token}` },
+        });
+
+        dispatch({ type: "FETCH_SUCCESS", payload: data });
+      } catch (error) {
+        dispatch({ type: "FETCH_FAIL", payload: getError(error) });
+      }
+    };
+    if (!userInfo) {
+      return navigate("/login");
+    }
+    if (!report._id || (report._id && report._id !== reportId)) {
+      fetchReport();
+    }
+  }, [report, navigate, userInfo, reportId]);
+  const navigateButton = () => {
+    navigate("/admin/report");
   };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    try {
+      dispatch({ type: "UPDATE_REQUEST" });
+      await axios.put(
+        `/api/report/${reportId}`,
+        {
+          _id: reportId,
+          name: report.name,
+          ibyangiritse: report.ibyangiritse,
+          depts: report.depts,
+          soldAt: report.soldAt,
+          comments: report.comments,
+          paymentMethod: report.paymentMethod,
+          sales: report.sales,
+          reportItems: report.reportItems,
+          costs: report.costs,
+          taxPrice: report.taxPrice,
+          grossProfit: report.grossProfit,
+          netProfit: report.netProfit,
+        },
+        {
+          headers: { Authorization: `Bearer ${userInfo.token}` },
+        }
+      );
+      dispatch({
+        type: "UPDATE_SUCCESS",
+      });
+      toast.success("depts paid");
+      navigate("/admin/report");
+    } catch (err) {
+      toast.error(getError(err));
+      dispatch({ type: "Payment failed" });
+    }
+  };
+
+  const [searchResult, setSearchResult] = useState([]);
+  const [key, setKey] = useState("");
+
+  useEffect(() => {
+    const search = async () => {
+      try {
+        if (!key.trim()) {
+          setSearchResult([]);
+          return;
+        }
+        const res = await axios.get("/api/report/search", {
+          params: { key: key, limit: 3 },
+        });
+        setSearchResult(res.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    search();
+  }, [key]);
+
   return (
-    <Form className="d-flex me-auto" onSubmit={submitHandler}>
+    <Form className="d-flex me-auto">
       <InputGroup>
         <FormControl
           type="text"
           name="q"
           id="q"
-          onChange={(e) => setQuery(e.target.value)}
+          value={key}
+          onChange={(e) => setKey(e.target.value)}
           placeholder="search depts"
           aria-label="Search depts"
           aria-describedby="button-search"
@@ -25,6 +148,142 @@ function SearchDeptbox() {
           <i className="fas fa-search"></i>
         </Button>
       </InputGroup>
+      <div>
+        {searchResult &&
+          searchResult.map((report) => (
+            <Row>
+              <Col md={8}>
+                <Card className="mb-3">
+                  <Card.Body>
+                    <Card.Title>Report</Card.Title>
+
+                    <Card.Text>
+                      <strong>depts:</strong>
+                      {report.depts}
+                    </Card.Text>
+                    <Card.Text>
+                      <strong>losses:</strong>
+                      {report.ibyangiritse}
+                    </Card.Text>
+                    <Card.Text>
+                      <strong>Sold at:</strong>
+                      {report.soldAt}
+                      <br />
+                    </Card.Text>
+                    <Card.Text>
+                      <strong>Comments:</strong>
+                      {report.comments}
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+                <Card className="mb-3">
+                  <Card.Body>
+                    <Card.Title>Payments</Card.Title>
+                    <Card.Text>
+                      <strong>Mathod: </strong>
+                      {report.paymentMethod}
+                    </Card.Text>
+                    {report.paymentMethod === "Cash" ||
+                    report.paymentMethod === "MoMo" ? (
+                      <h4 style={{ color: "green" }}>Paid</h4>
+                    ) : (
+                      <MessageBox variant="danger">Not Paid</MessageBox>
+                    )}
+                  </Card.Body>
+                </Card>
+                <Card className="mb-3">
+                  <Card.Body>
+                    <Card.Title>Items</Card.Title>
+                    <ListGroup variant="flush">
+                      {report.reportItems &&
+                        report.reportItems.map((item) => (
+                          <ListGroup.Item key={item._id}>
+                            <Row className="align-item-center">
+                              <Col md={6}>
+                                <img
+                                  src={item.image}
+                                  alt={item.name}
+                                  className="img-fluid rounded img-thumbnail"
+                                />
+                                <Link to={`/product/${item.slug}`}>
+                                  {item.name}
+                                </Link>
+                              </Col>
+                              <Col md={2}>
+                                <span>{item.quantity}</span>
+                              </Col>
+                              <Col md={2}>{item.price} RWF</Col>
+                              <Col md={2}>{item.costPrice} RWF</Col>
+                            </Row>
+                          </ListGroup.Item>
+                        ))}
+                    </ListGroup>
+                  </Card.Body>
+                </Card>
+              </Col>
+
+              <Col md={4}>
+                <Card className="mb-3">
+                  <Card.Body>
+                    <Card.Title>Report Summary</Card.Title>
+                    <ListGroup variant="flush">
+                      <Row>
+                        <Col>Sales</Col>
+                        <Col>{report.sales}RWF</Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <strong>Total costs:</strong>{" "}
+                        </Col>
+                        <Col>
+                          <strong>{report.costs}RWF</strong>{" "}
+                        </Col>
+                      </Row>
+
+                      <Row>
+                        <Col>
+                          <strong>Tax:</strong>{" "}
+                        </Col>
+                        <Col>
+                          <strong>{report.taxPrice}RWF</strong>{" "}
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <strong>Gross profit:</strong>{" "}
+                        </Col>
+                        <Col>
+                          <strong>{report.grossProfit} RWF</strong>{" "}
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <strong>Net profit:</strong>{" "}
+                        </Col>
+                        <Col>
+                          <strong>{report.netProfit} RWF</strong>{" "}
+                        </Col>
+                      </Row>
+                    </ListGroup>
+                  </Card.Body>
+                </Card>
+                {report.depts > 0 && (
+                  <Button
+                    onClick={submitHandler}
+                    style={{ marginRight: "5rem" }}
+                    type="button"
+                  >
+                    Paid
+                  </Button>
+                )}
+
+                <Button type="button" onClick={navigateButton}>
+                  Back
+                </Button>
+              </Col>
+            </Row>
+          ))}
+      </div>
     </Form>
   );
 }

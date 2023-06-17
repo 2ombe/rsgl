@@ -35,6 +35,7 @@ reportRouter.post(
     res.status(201).send({ message: "new report generated", report });
   })
 );
+const PAGE_SIZE = 2;
 
 reportRouter.get(
   "/summary",
@@ -102,6 +103,45 @@ reportRouter.get(
   })
 );
 
+reportRouter.get("/search", async (req, res) => {
+  try {
+    const {
+      ibyangiritse,
+      soldAt,
+      depts,
+      real,
+      comments,
+      givenTo,
+      key,
+      page,
+      limit,
+    } = req.query;
+    const skip = (page - 1) * limit;
+    const search = key
+      ? {
+          $or: [
+            { givenTo: { $regex: key, $options: "i" } },
+            { comments: { $regex: key, $options: "i" } },
+          ],
+        }
+      : {};
+
+    const data = await Report.find(search).skip(skip).limit(limit);
+    res.json({ data });
+  } catch (error) {
+    console.error("Error fetching report data:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+reportRouter.get(
+  "/given",
+  expressAsyncHandler(async (req, res) => {
+    const givenTo = await Report.find().distinct("givenTo");
+    res.send(givenTo);
+  })
+);
+
 reportRouter.get(
   "/all",
   isAuth,
@@ -110,34 +150,6 @@ reportRouter.get(
     const report = await Report.find().sort({
       createdAt: -1,
     });
-    res.send(report);
-  })
-);
-
-reportRouter.post(
-  "/search",
-  isAuth,
-  expressAsyncHandler(async (req, res) => {
-    const { query } = req;
-    const givebTo = query.givebTo || "";
-    const searchQuery = query.query || "";
-
-    const queryFilter =
-      searchQuery && searchQuery !== "all"
-        ? {
-            name: {
-              $regex: searchQuery,
-              $options: "i",
-            },
-          }
-        : {};
-    const givenToFilter = givebTo && givebTo !== "all" ? { givebTo } : {};
-
-    const report = await Report.find({
-      ...queryFilter,
-      ...givenToFilter,
-    });
-
     res.send(report);
   })
 );
