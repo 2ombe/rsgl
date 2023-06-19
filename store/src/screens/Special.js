@@ -56,8 +56,7 @@ export default function Special() {
 
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
-  const [category, setCategory] = useState("");
-  const [brand, setBrand] = useState("");
+
   const [description, setDescription] = useState("");
 
   const submitHandler = async (e) => {
@@ -69,8 +68,7 @@ export default function Special() {
         {
           name,
           image,
-          category,
-          brand,
+
           description,
         },
         {
@@ -133,22 +131,6 @@ export default function Special() {
           {loadingUpload && <LoadingBox></LoadingBox>}
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="category">
-          <Form.Label>Category</Form.Label>
-          <Form.Control
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            required
-          />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="brand">
-          <Form.Label>Brand</Form.Label>
-          <Form.Control
-            value={brand}
-            onChange={(e) => setBrand(e.target.value)}
-            required
-          />
-        </Form.Group>
         <Form.Group className="mb-3" controlId="description">
           <Form.Label>Description</Form.Label>
           <Form.Control

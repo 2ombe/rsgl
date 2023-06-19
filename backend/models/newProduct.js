@@ -9,15 +9,7 @@ const specialRequest = new mongoose.Schema(
     image: {
       type: String,
     },
-    brand: {
-      type: String,
-    },
-    brand: {
-      type: String,
-    },
-    category: {
-      type: String,
-    },
+
     description: {
       type: String,
     },
