@@ -167,6 +167,7 @@ reportRouter.put(
       report.paymentMethod = report.paymentMethod;
       report.comments = report.comments;
       report.sales = report.depts;
+
       if (report.igice !== 0) {
         report.depts = report.depts - report.igice;
       } else {
@@ -175,6 +176,7 @@ reportRouter.put(
       report.costs = report.costs;
       report.grossProfit = report.sales - report.costs;
       report.taxPrice = report.grossProfit * 0.18;
+      report.createdAt = Date.now();
       report.netProfit = report.grossProfit - report.taxPrice;
       report.reportItems = req.body.reportItems.map((x) => ({
         ...x,
@@ -196,6 +198,7 @@ reportRouter.put(
       report.costs = report.costs;
       report.grossProfit = report.sales - report.costs;
       report.taxPrice = report.grossProfit * 0.18;
+      report.createdAt = Date.now();
       report.netProfit = report.grossProfit - report.taxPrice;
       report.reportItems = req.body.reportItems.map((x) => ({
         ...x,

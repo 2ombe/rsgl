@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useContext, useReducer } from "react";
+import React, { useEffect, useContext, useReducer, useState } from "react";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
@@ -10,7 +10,8 @@ import MessageBox from "../components/MessageBox";
 import { Store } from "../Store";
 import { getError } from "../utils";
 import { Link } from "react-router-dom";
-import Button from "react-bootstrap/esm/Button";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 import { toast } from "react-toastify";
 
 function reducer(state, action) {
@@ -36,6 +37,7 @@ function reducer(state, action) {
 
 export default function ReportScreen() {
   const { state } = useContext(Store);
+  const [igice, setIgice] = useState();
   const { userInfo } = state;
   const params = useParams();
   const { id: reportId } = params;
@@ -81,6 +83,7 @@ export default function ReportScreen() {
           _id: reportId,
           name: report.name,
           ibyangiritse: report.ibyangiritse,
+          igice: report.igice,
           depts: report.depts,
           soldAt: report.soldAt,
           comments: report.comments,
@@ -189,6 +192,10 @@ export default function ReportScreen() {
                   <Col>{report.sales}RWF</Col>
                 </Row>
                 <Row>
+                  <Col>Ayishyuwe</Col>
+                  <Col>{report.igice}RWF</Col>
+                </Row>
+                <Row>
                   <Col>
                     <strong>Total costs:</strong>{" "}
                   </Col>
@@ -232,6 +239,12 @@ export default function ReportScreen() {
             >
               Paid
             </Button>
+          )}
+          {report.igice === 0 && (
+            <Form>
+              <Form.Control type="number" placeholder="inter paid amount" />
+              <Button type="submit">Igice</Button>
+            </Form>
           )}
 
           <Button type="button" onClick={navigateButton}>

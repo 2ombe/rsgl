@@ -77,6 +77,7 @@ export default function Report() {
                 <th>Id</th>
                 <th>Date</th>
                 <th>Quantity</th>
+                <th>Name</th>
                 <th>Sold at</th>
                 <th>sales</th>
                 <th>costs</th>
@@ -97,6 +98,13 @@ export default function Report() {
                   <td>{item._id}</td>
                   <td>{item.createdAt.substring(0, 10)}</td>
                   <td>{item.real}</td>
+                  <td>
+                    {item.reportItems.map((item) => (
+                      <div key={item._id}>
+                        <div>{item.name}</div>
+                      </div>
+                    ))}
+                  </td>
                   <td>{item.soldAt}</td>
                   <td>{item.sales}</td>
 
