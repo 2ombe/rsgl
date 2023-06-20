@@ -183,7 +183,7 @@ function SearchForm() {
               <Row>
                 {report.map((report) => (
                   <Col sm={6} lg={4} className="mb-3" key={report._id}>
-                    <ReportScreen product={report}></ReportScreen>
+                    <ReportScreen product={report} />
                   </Col>
                 ))}
               </Row>
