@@ -75,7 +75,7 @@ function HomeScreen() {
       }
     }
   };
-  if (userInfo && (userInfo.isAdmin || userInfo.isSeller)) {
+  if (userInfo && userInfo.isAdmin) {
     return (
       <div>
         <Helmet>
@@ -92,6 +92,47 @@ function HomeScreen() {
             </div>
           </Col>
 
+          <Col className="col text-end">
+            <div>
+              <Button
+                type="button"
+                onClick={() => {
+                  navigate(`/admin/create`);
+                }}
+              >
+                Add expense
+              </Button>
+            </div>
+          </Col>
+        </Row>
+
+        <div className="products">
+          {loading ? (
+            <LoadingBox />
+          ) : error ? (
+            <MessageBox variant="danger">{error}</MessageBox>
+          ) : (
+            <Row>
+              {products.map &&
+                products.map((product) => (
+                  <Col key={product.slug} sm={6} md={4} lg={3} className="mb-3">
+                    <Product product={product}></Product>
+                  </Col>
+                ))}
+            </Row>
+          )}
+        </div>
+      </div>
+    );
+  } else if (userInfo && userInfo.isSeller) {
+    return (
+      <div>
+        <Helmet>
+          <title>jullien</title>
+        </Helmet>
+        <h1>Ibicuruzwa mububiko</h1>
+
+        <Row style={{ left: "0" }}>
           <Col className="col text-end">
             <div>
               <Button

@@ -26,6 +26,7 @@ reportRouter.post(
       ibyangiritse: req.body.ibyangiritse,
       comments: req.body.comments,
       depts: req.body.depts,
+      igice: req.body.igice,
       costs: req.body.costs,
       real: req.body.real,
       inStock: req.body.report,
@@ -166,7 +167,11 @@ reportRouter.put(
       report.paymentMethod = report.paymentMethod;
       report.comments = report.comments;
       report.sales = report.depts;
-      report.depts = report.depts * 0;
+      if (report.igice !== 0) {
+        report.depts = report.depts - report.igice;
+      } else {
+        report.depts = report.depts * 0;
+      }
       report.costs = report.costs;
       report.grossProfit = report.sales - report.costs;
       report.taxPrice = report.grossProfit * 0.18;
@@ -183,7 +188,11 @@ reportRouter.put(
       report.paymentMethod = report.paymentMethod;
       report.comments = report.comments;
       report.sales = report.depts + report.sales;
-      report.depts = report.depts * 0;
+      if (report.igice !== 0) {
+        report.depts = report.depts - report.igice;
+      } else {
+        report.depts = report.depts * 0;
+      }
       report.costs = report.costs;
       report.grossProfit = report.sales - report.costs;
       report.taxPrice = report.grossProfit * 0.18;
