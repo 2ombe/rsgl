@@ -154,14 +154,25 @@ reportRouter.get(
     res.send(report);
   })
 );
+reportRouter.put(
+  "/given/:id",
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    const report = await Report.findById(req.params.id);
+
+    report.igice = req.body.igice;
+
+    const updatedReport = await report.save();
+    res.send({ message: "Report updated!", report: updatedReport });
+  })
+);
 
 reportRouter.put(
   "/:id",
   isAuth,
   expressAsyncHandler(async (req, res) => {
     const report = await Report.findById(req.params.id);
-    if (report) {
-    }
+
     if (report && report.depts && !report.soldAt) {
       report.soldAt = report.depts / report.real;
       report.paymentMethod = report.paymentMethod;

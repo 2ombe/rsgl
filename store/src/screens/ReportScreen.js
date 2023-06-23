@@ -78,22 +78,11 @@ export default function ReportScreen() {
     try {
       dispatch({ type: "UPDATE_REQUEST" });
       await axios.put(
-        `/api/report/${reportId}`,
+        `/api/report/given/${reportId}`,
         {
           _id: reportId,
-          name: report.name,
-          ibyangiritse: report.ibyangiritse,
+
           igice: report.igice,
-          depts: report.depts,
-          soldAt: report.soldAt,
-          comments: report.comments,
-          paymentMethod: report.paymentMethod,
-          sales: report.sales,
-          reportItems: report.reportItems,
-          costs: report.costs,
-          taxPrice: report.taxPrice,
-          grossProfit: report.grossProfit,
-          netProfit: report.netProfit,
         },
         {
           headers: { Authorization: `Bearer ${userInfo.token}` },
