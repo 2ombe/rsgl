@@ -7,20 +7,21 @@ import Button from "react-bootstrap/esm/Button";
 import { Store } from "../Store";
 import { useNavigate } from "react-router-dom";
 import CheckoutSteps from "../components/Checksteps";
+import { toast } from "react-toastify";
 
 export default function Kora() {
   const navigate = useNavigate();
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
-  const {
-    cart: { report },
-  } = state;
+  const { cart } = state;
   const [comments, setComments] = useState("Paid");
-  const [soldAt, setSoldAt] = useState(report.soldAt || 0);
-  const [givenTo, setgivenTo] = useState(report.givenTo || "");
-  const [real, setReal] = useState(report.real || 0);
-  const [depts, setDepts] = useState(report.depts || 0);
-  const [ibyangiritse, setIbyangiritse] = useState(report.ibyangiritse || 0);
+  const [soldAt, setSoldAt] = useState(cart.report.soldAt || 0);
+  const [givenTo, setgivenTo] = useState(cart.report.givenTo || "");
+  const [real, setReal] = useState(cart.report.real || 0);
+  const [depts, setDepts] = useState(cart.report.depts || 0);
+  const [ibyangiritse, setIbyangiritse] = useState(
+    cart.report.ibyangiritse || 0
+  );
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -46,7 +47,15 @@ export default function Kora() {
         comments,
       })
     );
-    navigate("/payment");
+    if (
+      cart.cartItems[0].countInStock < real ||
+      cart.cartItems[0].countInStock < cart.report.real
+    ) {
+      toast.error("Ingano yibicuruzwa mwinjije iruta ibiri muri stock");
+      return;
+    } else {
+      navigate("/payment");
+    }
   };
 
   return (
