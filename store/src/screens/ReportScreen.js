@@ -78,11 +78,58 @@ export default function ReportScreen() {
     try {
       dispatch({ type: "UPDATE_REQUEST" });
       await axios.put(
-        `/api/report/given/${reportId}`,
+        `/api/report/${reportId}`,
         {
           _id: reportId,
-
+          name: report.name,
+          ibyangiritse: report.ibyangiritse,
           igice: report.igice,
+          depts: report.depts,
+          soldAt: report.soldAt,
+          comments: report.comments,
+          paymentMethod: report.paymentMethod,
+          sales: report.sales,
+          reportItems: report.reportItems,
+          costs: report.costs,
+          taxPrice: report.taxPrice,
+          grossProfit: report.grossProfit,
+          netProfit: report.netProfit,
+        },
+        {
+          headers: { Authorization: `Bearer ${userInfo.token}` },
+        }
+      );
+      dispatch({
+        type: "UPDATE_SUCCESS",
+      });
+      toast.success("depts paid");
+      navigate("/admin/report");
+    } catch (err) {
+      toast.error(getError(err));
+      dispatch({ type: "Payment failed" });
+    }
+  };
+  const handler = async (e) => {
+    e.preventDefault();
+    try {
+      dispatch({ type: "UPDATE_REQUEST" });
+      await axios.put(
+        `/api/report/${reportId}`,
+        {
+          _id: reportId,
+          name: report.name,
+          ibyangiritse: report.ibyangiritse,
+          igice: report.igice,
+          depts: report.depts,
+          soldAt: report.soldAt,
+          comments: report.comments,
+          paymentMethod: report.paymentMethod,
+          sales: report.sales,
+          reportItems: report.reportItems,
+          costs: report.costs,
+          taxPrice: report.taxPrice,
+          grossProfit: report.grossProfit,
+          netProfit: report.netProfit,
         },
         {
           headers: { Authorization: `Bearer ${userInfo.token}` },
@@ -231,7 +278,11 @@ export default function ReportScreen() {
           )}
           {report.igice === 0 && (
             <Form>
-              <Form.Control type="number" placeholder="inter paid amount" />
+              <Form.Control
+                type="number"
+                placeholder="inter paid amount"
+                onChange={(e) => setIgice(e.target.value)}
+              />
               <Button type="submit">Igice</Button>
             </Form>
           )}
