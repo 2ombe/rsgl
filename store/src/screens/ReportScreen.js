@@ -109,17 +109,15 @@ export default function ReportScreen() {
       dispatch({ type: "Payment failed" });
     }
   };
-  const handler = async (e) => {
-    e.preventDefault();
+  const handleUpdate = async () => {
     try {
-      dispatch({ type: "UPDATE_REQUEST" });
-      await axios.put(
-        `/api/report/${reportId}`,
+      const response = await axios.put(
+        `/api/report/given/${reportId}`,
         {
           _id: reportId,
+          igice,
           name: report.name,
           ibyangiritse: report.ibyangiritse,
-          igice: report.igice,
           depts: report.depts,
           soldAt: report.soldAt,
           comments: report.comments,
@@ -132,17 +130,23 @@ export default function ReportScreen() {
           netProfit: report.netProfit,
         },
         {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userInfo.token}`,
+          },
         }
       );
-      dispatch({
-        type: "UPDATE_SUCCESS",
-      });
-      toast.success("depts paid");
-      navigate("/admin/report");
-    } catch (err) {
-      toast.error(getError(err));
-      dispatch({ type: "Payment failed" });
+      console.log(response);
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data.message);
+        console.log(data.report);
+      } else {
+        console.error("Failed to update report");
+      }
+    } catch (error) {
+      console.error("Error:", error);
     }
   };
 
@@ -276,14 +280,17 @@ export default function ReportScreen() {
               Paid
             </Button>
           )}
-          {report.igice === 0 && (
-            <Form>
-              <Form.Control
-                type="number"
-                placeholder="inter paid amount"
-                onChange={(e) => setIgice(e.target.value)}
-              />
-              <Button type="submit">Igice</Button>
+          {report.igice !== report.depts && (
+            <Form onSubmit={handleUpdate}>
+              <Form.Group controlId="igice">
+                <Form.Control
+                  type="number"
+                  placeholder="inter paid amount"
+                  value={igice}
+                  onChange={(e) => setIgice(e.target.value)}
+                />
+                <Button type="submit">Igice</Button>
+              </Form.Group>
             </Form>
           )}
 

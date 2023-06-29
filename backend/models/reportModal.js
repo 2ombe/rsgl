@@ -26,7 +26,11 @@ const reportModalSchema = new mongoose.Schema(
     givenTo: { type: String },
 
     paymentMethod: { type: String, required: true },
-
+    status: {
+      type: String,
+      enum: ["PAID", "NOT-PAID", "HALF-PAID"],
+      default: "PAID",
+    },
     sales: { type: Number, required: true },
     costs: { type: Number, required: true },
     taxPrice: { type: Number, required: true },

@@ -159,11 +159,47 @@ reportRouter.put(
   isAuth,
   expressAsyncHandler(async (req, res) => {
     const report = await Report.findById(req.params.id);
+    if (report.igice <= report.costs) {
+      report.igice = req.body.igice;
+      report.soldAt = report.soldAt;
+      report.paymentMethod = report.paymentMethod;
+      report.comments = report.comments;
+      report.sales = report.igice;
 
-    report.igice = req.body.igice;
+      report.depts = report.depts - report.igice;
 
-    const updatedReport = await report.save();
-    res.send({ message: "Report updated!", report: updatedReport });
+      report.costs = report.costs;
+      report.grossProfit = report.igice - report.costs;
+      report.taxPrice = report.grossProfit * 0.18;
+      report.createdAt = Date.now();
+      report.netProfit = report.grossProfit - report.taxPrice;
+      report.reportItems = req.body.reportItems.map((x) => ({
+        ...x,
+        product: x._id,
+      }));
+
+      const updatedReport = await report.save();
+      res.send({ message: "Report updated!", report: updatedReport });
+    } else {
+      report.igice = req.body.igice;
+      report.soldAt = report.soldAt;
+      report.paymentMethod = report.paymentMethod;
+      report.comments = report.comments;
+      report.sales = report.igice;
+      report.depts = report.depts - report.igice;
+      report.costs = report.costs;
+      report.grossProfit = report.sales - report.igice;
+      report.taxPrice = report.grossProfit * 0.18;
+      report.createdAt = Date.now();
+      report.netProfit = report.grossProfit - report.taxPrice;
+      report.reportItems = req.body.reportItems.map((x) => ({
+        ...x,
+        product: x._id,
+      }));
+
+      const updatedReport = await report.save();
+      res.send({ message: "Report updated!", report: updatedReport });
+    }
   })
 );
 
