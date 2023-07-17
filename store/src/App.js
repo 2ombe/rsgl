@@ -1,60 +1,60 @@
-import React, { useContext, useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import "./App.css";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import Navbar from "react-bootstrap/Navbar";
-import Container from "react-bootstrap/Container";
-import { LinkContainer } from "react-router-bootstrap";
-import Nav from "react-bootstrap/Nav";
-import Badge from "react-bootstrap/Badge";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import { Store } from "./Store.js";
-import HomeScreen from "./screens/HomeScreen.js";
-import ProductScreen from "./screens/ProductScreen.js";
-import { Link } from "react-router-dom";
-import CartScreen from "./screens/CartScreen.js";
-import ShippingAddress from "./screens/ShippingAddress";
-import SignupScreen from "./screens/SignupScreen";
-import PaymentMethods from "./screens/PaymentMethods";
-import PlaceOrderScreen from "./screens/PlaceOrderScreen";
-import OrderScreen from "./screens/OrderScreen";
-import OrderHistory from "./screens/OrderHistory";
-import ProfileScreen from "./screens/ProfileScreen";
-import Button from "react-bootstrap/Button";
-import { getError } from "./utils";
-import axios from "axios";
-import SearchBox from "./components/SearchBox";
-import SearchScreen from "./screens/SearchScreen";
-import ProtectedRoute from "./components/ProtectedRoute";
-import DashboardScreen from "./screens/DashboardScreen";
+import React, { useContext, useEffect, useState } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import './App.css';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Navbar from 'react-bootstrap/Navbar';
+import Container from 'react-bootstrap/Container';
+import { LinkContainer } from 'react-router-bootstrap';
+import Nav from 'react-bootstrap/Nav';
+import Badge from 'react-bootstrap/Badge';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import { Store } from './Store.js';
+import HomeScreen from './screens/HomeScreen.js';
+import ProductScreen from './screens/ProductScreen.js';
+import { Link } from 'react-router-dom';
+import CartScreen from './screens/CartScreen.js';
+import ShippingAddress from './screens/ShippingAddress';
+import SignupScreen from './screens/SignupScreen';
+import PaymentMethods from './screens/PaymentMethods';
+import PlaceOrderScreen from './screens/PlaceOrderScreen';
+import OrderScreen from './screens/OrderScreen';
+import OrderHistory from './screens/OrderHistory';
+import ProfileScreen from './screens/ProfileScreen';
+import Button from 'react-bootstrap/Button';
+import { getError } from './utils';
+import axios from 'axios';
+import SearchBox from './components/SearchBox';
+import SearchScreen from './screens/SearchScreen';
+import ProtectedRoute from './components/ProtectedRoute';
+import DashboardScreen from './screens/DashboardScreen';
 
-import ProductEditScreen from "./screens/ProductEditScreen";
-import OrderListScreen from "./screens/OrderListScreen";
-import UserListScreen from "./screens/UserListScreen";
-import UserEditScreen from "./screens/UserEditScreen";
-import Report from "./screens/IncomeStatment";
-import SendReport from "./screens/SendReport";
-import ReportScreen from "./screens/ReportScreen";
-import ReportDashboard from "./screens/ReportDashboard";
-import Iyandikishe from "./screens/Irandikishe";
-import Kora from "./screens/Kora";
-import Expense from "./screens/Expese";
-import SeeReport from "./screens/SeeReport";
-import Special from "./screens/Special";
-import GetSpecial from "./screens/GetSpecial";
-import SearchForm from "./screens/SearchDept";
+import ProductEditScreen from './screens/ProductEditScreen';
+import OrderListScreen from './screens/OrderListScreen';
+import UserListScreen from './screens/UserListScreen';
+import UserEditScreen from './screens/UserEditScreen';
+import Report from './screens/IncomeStatment';
+import SendReport from './screens/SendReport';
+import ReportScreen from './screens/ReportScreen';
+import ReportDashboard from './screens/ReportDashboard';
+import Iyandikishe from './screens/Irandikishe';
+import Kora from './screens/Kora';
+import Expense from './screens/Expese';
+import SeeReport from './screens/SeeReport';
+import Special from './screens/Special';
+import GetSpecial from './screens/GetSpecial';
+import SearchForm from './screens/SearchDept';
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { cart, userInfo } = state;
   console.log(userInfo);
   const signoutHandler = () => {
-    ctxDispatch({ type: "USER_SIGNOUT" });
-    localStorage.removeItem("userInfo");
-    localStorage.removeItem("shippingAddress");
-    localStorage.removeItem("paymentMethod");
-    window.location.href = "/signin";
+    ctxDispatch({ type: 'USER_SIGNOUT' });
+    localStorage.removeItem('userInfo');
+    localStorage.removeItem('shippingAddress');
+    localStorage.removeItem('paymentMethod');
+    window.location.href = '/signin';
   };
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -78,14 +78,14 @@ function App() {
       <div
         className={
           sidebarIsOpen
-            ? "d-flex flex-column site-container active-cont"
-            : "d-flex flex-column site-container"
+            ? 'd-flex flex-column site-container active-cont'
+            : 'd-flex flex-column site-container'
         }
       >
         <ToastContainer position="bottom-center" limit={1} />
         <header>
           <Navbar
-            style={{ backgroundColor: "Green" }}
+            style={{ backgroundColor: 'Green' }}
             variant="dark"
             expand="lg"
           >
@@ -102,7 +102,7 @@ function App() {
                     src="/logo.png"
                     width={40}
                     height={40}
-                    style={{ borderRadius: "50%" }}
+                    style={{ borderRadius: '50%' }}
                     alt="logo"
                   />
                 </Navbar.Brand>
@@ -195,8 +195,8 @@ function App() {
         <div
           className={
             sidebarIsOpen
-              ? "active-nav side-navbar d-flex justify-content-between flex-wrap flex-column"
-              : "side-navbar d-flex justify-content-between flex-wrap flex-column"
+              ? 'active-nav side-navbar d-flex justify-content-between flex-wrap flex-column'
+              : 'side-navbar d-flex justify-content-between flex-wrap flex-column'
           }
         >
           <Nav className="flex-column text-white w-100 p-2">

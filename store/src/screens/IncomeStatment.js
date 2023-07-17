@@ -1,24 +1,24 @@
-import React, { useEffect } from "react";
-import Table from "react-bootstrap/Table";
-import { Helmet } from "react-helmet-async";
-import axios from "axios";
-import { useContext } from "react";
-import Button from "react-bootstrap/Button";
-import { Store } from "../Store";
-import LoadingBox from "../components/LoadingBox";
-import MessageBox from "../components/MessageBox";
-import { useReducer } from "react";
-import { getError } from "../utils";
-import { useNavigate } from "react-router-dom";
-import SearchDeptbox from "../components/SearchDeptbox";
+import React, { useEffect } from 'react';
+import Table from 'react-bootstrap/Table';
+import { Helmet } from 'react-helmet-async';
+import axios from 'axios';
+import { useContext } from 'react';
+import Button from 'react-bootstrap/Button';
+import { Store } from '../Store';
+import LoadingBox from '../components/LoadingBox';
+import MessageBox from '../components/MessageBox';
+import { useReducer } from 'react';
+import { getError } from '../utils';
+import { useNavigate } from 'react-router-dom';
+import SearchDeptbox from '../components/SearchDeptbox';
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case "FETCH_REQUEST":
+    case 'FETCH_REQUEST':
       return { ...state, loading: true };
-    case "FETCH_SUCCESS":
+    case 'FETCH_SUCCESS':
       return { ...state, report: action.payload, loading: false };
-    case "FETCH_FAIL":
+    case 'FETCH_FAIL':
       return { ...state, loading: false, error: action.payload };
     default:
       return state;
@@ -32,21 +32,21 @@ export default function Report() {
 
   const [{ loading, error, report }, dispatch] = useReducer(reducer, {
     loading: true,
-    error: "",
+    error: '',
   });
   useEffect(() => {
     const fetchData = async () => {
-      dispatch({ type: "FETCH_REQUEST" });
+      dispatch({ type: 'FETCH_REQUEST' });
       try {
         const { data } = await axios.get(
           `/api/report/all`,
 
           { headers: { Authorization: `Bearer ${userInfo.token}` } }
         );
-        dispatch({ type: "FETCH_SUCCESS", payload: data });
+        dispatch({ type: 'FETCH_SUCCESS', payload: data });
       } catch (error) {
         dispatch({
-          type: "FETCH_FAIL",
+          type: 'FETCH_FAIL',
           payload: getError(error),
         });
       }
@@ -67,7 +67,7 @@ export default function Report() {
           <SearchDeptbox />
           <table
             className="table mt-3"
-            style={{ background: "rgb(0, 102, 255)" }}
+            style={{ background: 'rgb(0, 102, 255)' }}
             striped
             bordered
             hover
@@ -111,15 +111,15 @@ export default function Report() {
                   <td>{item.costs}</td>
 
                   <td>{item.taxPrice}</td>
-                  <td style={{ backgroundColor: "yellow" }} className="profit">
+                  <td style={{ backgroundColor: 'yellow' }} className="profit">
                     {item.grossProfit}
                   </td>
-                  <td style={{ backgroundColor: "yellow" }} className="profit">
+                  <td style={{ backgroundColor: 'yellow' }} className="profit">
                     {item.netProfit}
                   </td>
-                  <td style={{ backgroundColor: "tomato" }}>{item.depts}</td>
-                  <td style={{ backgroundColor: "tomato" }}>{item.expense}</td>
-                  <td style={{ backgroundColor: "tomato" }}>
+                  <td style={{ backgroundColor: 'tomato' }}>{item.depts}</td>
+                  <td style={{ backgroundColor: 'tomato' }}>{item.expense}</td>
+                  <td style={{ backgroundColor: 'tomato' }}>
                     {item.ibyangiritse}
                   </td>
                   {/* <td>{item.isPaid === true ? "Paid" : "No"}</td> */}
