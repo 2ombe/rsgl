@@ -189,20 +189,20 @@ function SearchForm() {
               </Row>
 
               <div>
-                {[...Array(pages).keys()].map((x) => (
-                  <LinkContainer
-                    key={x + 1}
-                    className="mx-1"
-                    to={filterGivenTo({ page: x + 1 })}
-                  >
-                    <Button
-                      className={Number(page) === x + 1 ? "text-bold" : ""}
-                      variant="light"
-                    >
-                      {x + 1}
-                    </Button>
-                  </LinkContainer>
-                ))}
+              {[...Array(Math.min(5, pages)).keys()].map((x) => (
+    <LinkContainer
+      key={x + 1}
+      className="mx-1"
+      to={filterGivenTo({ page: x + 1 })}
+    >
+      <Button
+        className={Number(page) === x + 1 ? "text-bold" : ""}
+        variant="light"
+      >
+        {x + 1}
+      </Button>
+    </LinkContainer>
+  ))}
               </div>
             </>
           )}

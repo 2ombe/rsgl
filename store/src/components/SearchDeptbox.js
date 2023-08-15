@@ -108,7 +108,7 @@ function SearchDeptbox() {
           return;
         }
         const res = await axios.get('/api/report/search', {
-          params: { key: key, limit: 3 },
+          params: { key: key },
         });
         setSearchResult(res.data.data);
       } catch (error) {

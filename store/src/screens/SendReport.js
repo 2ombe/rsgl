@@ -61,6 +61,9 @@ export default function SendReport() {
   const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100;
   // check losses
   if (cart.report.ibyangiritse > 0) {
+
+    
+
     cart.Sales = round2(
       cart.cartItems.reduce(
         (a, c) =>
@@ -77,8 +80,14 @@ export default function SendReport() {
     cart.taxPrice = round2(0.18 * 0 * cart.grossProfit);
 
     cart.netProfit = 0 * cart.grossProfit - cart.taxPrice;
+
+  
     // odd number
   } else if (cart.report.depts && !cart.report.soldAt) {
+
+    cart.depts=round2(cart.report.depts*cart.report.real)
+   
+
     cart.Sales = round2(
       cart.cartItems.reduce(
         (a, c) =>
@@ -100,6 +109,10 @@ export default function SendReport() {
     cart.netProfit = cart.grossProfit - cart.taxPrice;
     //no changes
   } else {
+
+    cart.depts=round2(cart.report.depts*cart.report.real)
+    
+
     cart.Sales = round2(
       cart.cartItems.reduce(
         (a, c) => a + cart.report.real * cart.report.soldAt - cart.report.depts,
@@ -126,7 +139,7 @@ export default function SendReport() {
           reportItems: cart.cartItems,
           expense: cart.report.expense,
           real: cart.report.real,
-          depts: cart.report.depts,
+          depts: cart.depts,
           name: cart.cartItems.name,
           quantity: cart.cartItems.quantity,
           comments: cart.report.comments,
@@ -193,7 +206,7 @@ export default function SendReport() {
               <Card.Title>Report</Card.Title>
               <Card.Text>
                 <strong>depts:</strong>
-                {cart.report.depts} RWF
+                {cart.depts} RWF
               </Card.Text>
               <Card.Text>
                 <strong>Losses:</strong>

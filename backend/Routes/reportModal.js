@@ -106,17 +106,7 @@ reportRouter.get(
 
 reportRouter.get("/search", async (req, res) => {
   try {
-    const {
-      ibyangiritse,
-      soldAt,
-      depts,
-      real,
-      comments,
-      givenTo,
-      key,
-      page,
-      limit,
-    } = req.query;
+    const { key, page, limit } = req.query;
     const skip = (page - 1) * limit;
     const search = key
       ? {
@@ -127,13 +117,22 @@ reportRouter.get("/search", async (req, res) => {
         }
       : {};
 
-    const data = await Report.find(search).skip(skip).limit(limit);
-    res.json({ data });
+   
+    const totalCount = await Report.countDocuments(search);
+
+    
+    const data = await Report.find(search).skip(skip).limit(parseInt(limit));
+
+    res.json({
+      data,
+      totalCount,
+    });
   } catch (error) {
     console.error("Error fetching report data:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 
 reportRouter.get(
   "/given",
