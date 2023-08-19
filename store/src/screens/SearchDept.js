@@ -79,30 +79,25 @@ function SearchForm() {
             Authorization: `Bearer ${state.userInfo.token}`,
           },
         };
-
-        const { data } = await axios.get(
-          `/api/report/search?page=${page}$query${query}$ibyangiritse${ibyangiritse}:soldAt${soldAt}&depts${depts}&real${real}$comments${comments}`,
-          config
-        );
-
-        dispatch({ type: "FETCH_SUCCESS", payload: data });
+  
+        const apiUrl = `/api/report/search?page=${page}&query=${query}&ibyangiritse=${ibyangiritse}&soldAt=${soldAt}&depts=${depts}&real=${real}&comments=${comments}`;
+        
+        // Only fetch data if the 'depts' value is greater than 0
+        if (depts > 0) {
+          const { data } = await axios.get(apiUrl, config);
+          dispatch({ type: "FETCH_SUCCESS", payload: data });
+        } else {
+          // If 'depts' is not greater than 0, set report to an empty array
+          dispatch({ type: "FETCH_SUCCESS", payload: { report: [], countReport: 0 } });
+        }
       } catch (error) {
         dispatch({ type: "FETCH_FAIL", payload: error.message });
       }
     };
-
+  
     fetchData();
-  }, [
-    givenTo,
-    query,
-    state,
-    page,
-    ibyangiritse,
-    soldAt,
-    depts,
-    real,
-    comments,
-  ]);
+  }, [givenTo, query, state, page, ibyangiritse, soldAt, depts, real, comments]);
+  
 
   const filterGivenTo = (filter) => {
     const filterPage = filter.page || page;

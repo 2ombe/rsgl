@@ -158,12 +158,12 @@ reportRouter.put(
   isAuth,
   expressAsyncHandler(async (req, res) => {
     const report = await Report.findById(req.params.id);
-    if (report.igice <= report.costs) {
+    if (report.igice >0) {
       report.igice = req.body.igice;
       report.soldAt = report.soldAt;
       report.paymentMethod = report.paymentMethod;
       report.comments = report.comments;
-      report.sales = report.igice;
+      report.sales = report.igice+report.sales;
 
       report.depts = report.depts - report.igice;
 
