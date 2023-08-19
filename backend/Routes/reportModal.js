@@ -106,22 +106,24 @@ reportRouter.get(
 
 reportRouter.get("/search", async (req, res) => {
   try {
-    const { key, page, limit } = req.query;
+    const { key, page, limit, depts } = req.query;
     const skip = (page - 1) * limit;
+    
+    // Build the search filter based on 'key' and 'depts'
     const search = key
       ? {
           $or: [
             { givenTo: { $regex: key, $options: "i" } },
             { comments: { $regex: key, $options: "i" } },
           ],
+          depts: { $gt: 0 }, // Add condition for 'depts' greater than 0
         }
-      : {};
+      : { depts: { $gt: 0 } }; // Only filter by 'depts' if 'key' is not provided
 
-   
     const totalCount = await Report.countDocuments(search);
-
     
     const data = await Report.find(search).skip(skip).limit(parseInt(limit));
+    console.log(data);
 
     res.json({
       data,
@@ -132,6 +134,7 @@ reportRouter.get("/search", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 
 
 reportRouter.get(
