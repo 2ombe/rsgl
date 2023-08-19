@@ -123,7 +123,7 @@ reportRouter.get("/search", async (req, res) => {
     const totalCount = await Report.countDocuments(search);
     
     const data = await Report.find(search).skip(skip).limit(parseInt(limit));
-    console.log(data);
+    
 
     res.json({
       data,
