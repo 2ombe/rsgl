@@ -171,7 +171,7 @@ reportRouter.put(
       report.depts = report.depts - report.igice;
 
       report.costs = report.costs;
-      report.grossProfit = report.igice - report.costs;
+      report.grossProfit = report.sales - report.costs;
       report.taxPrice = report.grossProfit * 0.18;
       report.createdAt = Date.now();
       report.netProfit = report.grossProfit - report.taxPrice;
