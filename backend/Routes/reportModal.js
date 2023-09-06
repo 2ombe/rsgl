@@ -36,6 +36,68 @@ reportRouter.post(
     res.status(201).send({ message: "new report generated", report });
   })
 );
+
+reportRouter.put("/update/:id",isAuth,expressAsyncHandler(async(req,res)=>{
+  const reportId = req.params.id
+  const updatedData=req.body
+
+  try {
+    const report = await Report.findById(reportId)
+    if(report){
+      report.reportItems=report.reportItems
+      report.ibyangiritse = updatedData.ibyangiritse||report.ibyangiritse
+      report.soldAt = updatedData.soldAt||report.soldAt
+      report.depts = updatedData.depts||report.depts
+      report.real = updatedData.real||report.real
+      report.comments = updatedData.comments||report.comments
+      report.igice = updatedData.igice||report.igice
+      report.givenTo = updatedData.givenTo||report.givenTo
+      report.paymentMethod = updatedData.paymentMethod||report.paymentMethod
+      report.status = updatedData.status||report.status
+      report.sales = updatedData.sales||report.sales
+      report.costs = updatedData.costs||report.costs
+      report.taxPrice = updatedData.taxPrice||report.taxPrice
+      report.netProfit = updatedData.netProfit||report.netProfit
+      report.grossProfit = updatedData.grossProfit||report.grossProfit
+      report.user = updatedData.user||report.user
+      report.isPaid = updatedData.isPaid||report.isPaid
+      report.inStock = updatedData.inStock||report.inStock
+      report.paidAt = updatedData.paidAt||report.paidAt
+
+      const updatedReport = await report.save()
+      res.send({message:"Report updated!",report: updatedReport})
+    }else{
+      res.status(404).send({ message: "Report not found" });
+    }
+
+
+  } catch (error) {
+    console.error("Error updating report:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+  }
+
+}))
+
+// Delete a report by ID
+reportRouter.delete(
+  "/delete/:id",expressAsyncHandler(async(req,res)=>{
+    const reportId = req.params.id
+    try {
+      const report = await Report.findById(reportId)
+      if(report){
+        await report.remove()
+        res.send({message:"Report deleted"})
+      }else{
+        res.status(404).send({ message: "Report not found" });
+      }
+    } catch (error) {
+      console.error("Error deleting report:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  })
+)
+
+
 const PAGE_SIZE = 2;
 
 reportRouter.get(

@@ -44,6 +44,7 @@ import SeeReport from './screens/SeeReport';
 import Special from './screens/Special';
 import GetSpecial from './screens/GetSpecial';
 import SearchForm from './screens/SearchDept';
+import UpdateReportModal from './screens/UpdateReport';
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -246,6 +247,14 @@ function App() {
               />
               <Route
                 path="/report/:id"
+                element={
+                  <ProtectedRoute>
+                    <ReportScreen />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/update/:id"
                 element={
                   <ProtectedRoute>
                     <ReportScreen />

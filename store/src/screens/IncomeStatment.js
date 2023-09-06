@@ -135,6 +135,17 @@ export default function Report() {
                       Details
                     </Button>
                   </td>
+                  <td>
+                    <Button
+                      type="button"
+                      variant="light"
+                      onClick={() => {
+                        navigate(`/update/${item._id}`);
+                      }}
+                    >
+                      update
+                    </Button>
+                  </td>
                 </tr>
               ))}
             </tbody>

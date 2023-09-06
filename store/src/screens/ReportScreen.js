@@ -5,7 +5,7 @@ import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import { Helmet } from "react-helmet-async";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import MessageBox from "../components/MessageBox";
 import { Store } from "../Store";
 import { getError } from "../utils";
@@ -72,6 +72,9 @@ export default function ReportScreen() {
   const navigateButton = () => {
     navigate("/admin/report");
   };
+  const navigateUpdate = () => {
+    navigate(`/update/${report._id}`);
+  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -107,6 +110,19 @@ export default function ReportScreen() {
     } catch (err) {
       toast.error(getError(err));
       dispatch({ type: "Payment failed" });
+    }
+  };
+  const handleDelete = async () => {
+    if (window.confirm("Are you sure you want to delete this report?")) {
+      try {
+        await axios.delete(`/api/report/delete/${reportId}`, {
+          headers: { Authorization: `Bearer ${userInfo.token}` },
+        });
+        toast.success("Report deleted");
+        navigate("/admin/report");
+      } catch (error) {
+        toast.error(getError(error));
+      }
     }
   };
   const handleUpdate = async () => {
@@ -294,9 +310,21 @@ export default function ReportScreen() {
             </Form>
           )}
 
-          <Button type="button" onClick={navigateButton}>
+          <Button type="button" style={{ marginTop: "10px" }}  onClick={navigateButton}>
             Back
           </Button>
+          
+          <Button type="button" style={{ marginLeft: "10px" }} onClick={()=>navigate(`/update/${reportId}`)}>
+            Update
+          </Button>
+          <Button
+        type="button"
+        variant="danger"
+        onClick={handleDelete}
+        style={{ marginLeft: "10px" }}
+      >
+        Delete
+      </Button>
         </Col>
       </Row>
     </div>
