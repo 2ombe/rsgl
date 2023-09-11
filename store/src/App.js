@@ -49,7 +49,7 @@ import UpdateReportModal from './screens/UpdateReport';
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { cart, userInfo } = state;
-  console.log(userInfo);
+ 
   const signoutHandler = () => {
     ctxDispatch({ type: 'USER_SIGNOUT' });
     localStorage.removeItem('userInfo');
